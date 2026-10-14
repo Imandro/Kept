@@ -1,0 +1,413 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+  SAVING
+}
+
+enum RecurrenceType {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  YEARLY
+  CUSTOM
+}
+
+enum SavingMethodType {
+  PERCENTAGE_50_30_20
+  ENVELOPE_SYSTEM
+  ROUND_UP
+  PAY_YOURSELF_FIRST
+  ZERO_BASED
+  CUSTOM
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?
+  avatar        String?
+  currency      String    @default("MXN")
+  locale        String    @default("es")
+  timezone      String    @default("America/Mexico_City")
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  accounts              Account[]
+  sessions              Session[]
+  transactions          Transaction[]
+  categories            Category[]
+  goals                 Goal[]
+  savingMethods         SavingMethod[]
+  budgets               Budget[]
+  aiChats               AIChat[]
+  aiMessages            AIMessage[]
+  preferences           UserPreferences?
+  notifications         Notification[]
+  verificationTokens    VerificationToken[]
+  recurringTransactions RecurringTransaction[]
+  financialAccounts     FinancialAccount[]
+  
+  @@map("users")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model FinancialAccount {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // checking, savings, cash, investment, crypto, manual
+  balance     Decimal  @default(0) @db.Decimal(15, 2)
+  currency    String   @default("MXN")
+  icon        String?
+  color       String?
+  isDefault   Boolean  @default(false)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  savingAllocations SavingAllocation[]
+  recurringTransactions RecurringTransaction[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("financial_accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  user       User     @relation(fields: [identifier], references: [id], onDelete: Cascade)
+  
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Category {
+  id          String        @id @default(cuid())
+  name        String
+  icon        String
+  color       String
+  type        TransactionType
+  parentId    String?
+  parent      Category?     @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[]    @relation("CategoryHierarchy")
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  budgets     Budget[]
+  recurringTransactions RecurringTransaction[]
+  isSystem    Boolean       @default(false)
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@unique([name, userId])
+  @@map("categories")
+}
+
+model Transaction {
+  id              String           @id @default(cuid())
+  amount          Decimal          @db.Decimal(15, 2)
+  type            TransactionType
+  description     String?
+  notes           String?
+  date            DateTime         @db.Date
+  accountId       String
+  account         FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  categoryId      String?
+  category        Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goalId          String?
+  goal            Goal?            @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  savingMethodId  String?
+  savingMethod    SavingMethod?    @relation(fields: [savingMethodId], references: [id], onDelete: SetNull)
+  recurrenceId    String?
+  recurrence      RecurringTransaction? @relation(fields: [recurrenceId], references: [id], onDelete: SetNull)
+  tags            String[]
+  location        String?
+  receiptUrl      String?
+  isRecurring     Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  @@index([userId, date])
+  @@index([userId, categoryId])
+  @@index([userId, goalId])
+  @@map("transactions")
+}
+
+model RecurringTransaction {
+  id            String             @id @default(cuid())
+  name          String
+  amount        Decimal            @db.Decimal(15, 2)
+  type          TransactionType
+  categoryId    String?
+  category      Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  accountId     String
+  account       FinancialAccount   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  frequency     RecurrenceType
+  customDays    Int[]
+  startDate     DateTime           @db.Date
+  endDate       DateTime?          @db.Date
+  nextRunDate   DateTime           @db.Date
+  isActive      Boolean            @default(true)
+  transactions  Transaction[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  
+  @@map("recurring_transactions")
+}
+
+model Goal {
+  id              String      @id @default(cuid())
+  name            String
+  description     String?
+  targetAmount    Decimal     @db.Decimal(15, 2)
+  currentAmount   Decimal     @default(0) @db.Decimal(15, 2)
+  currency        String      @default("MXN")
+  startDate       DateTime    @db.Date
+  targetDate      DateTime    @db.Date
+  status          GoalStatus  @default(ACTIVE)
+  icon            String?
+  color           String?
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions    Transaction[]
+  milestones      Milestone[]
+  contributions   GoalContribution[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@map("goals")
+}
+
+model Milestone {
+  id          String   @id @default(cuid())
+  name        String
+  amount      Decimal  @db.Decimal(15, 2)
+  targetDate  DateTime @db.Date
+  isCompleted Boolean  @default(false)
+  completedAt DateTime?
+  goalId      String
+  goal        Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  
+  @@map("milestones")
+}
+
+model GoalContribution {
+  id        String   @id @default(cuid())
+  amount    Decimal  @db.Decimal(15, 2)
+  date      DateTime @db.Date
+  note      String?
+  goalId    String
+  goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@map("goal_contributions")
+}
+
+model SavingMethod {
+  id            String           @id @default(cuid())
+  name          String
+  type          SavingMethodType
+  configuration Json
+  isActive      Boolean          @default(true)
+  userId        String
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+  allocations   SavingAllocation[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  
+  @@map("saving_methods")
+}
+
+model SavingAllocation {
+  id                   String             @id @default(cuid())
+  percentage           Float
+  targetAccountId      String
+  targetAccount        FinancialAccount   @relation(fields: [targetAccountId], references: [id], onDelete: Cascade)
+  savingMethodId       String
+  savingMethod         SavingMethod       @relation(fields: [savingMethodId], references: [id], onDelete: Cascade)
+  priority             Int                @default(0)
+  createdAt            DateTime           @default(now())
+  
+  @@map("saving_allocations")
+}
+
+model Budget {
+  id          String    @id @default(cuid())
+  name        String
+  amount      Decimal   @db.Decimal(15, 2)
+  spent       Decimal   @default(0) @db.Decimal(15, 2)
+  periodStart DateTime  @db.Date
+  periodEnd   DateTime  @db.Date
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alerts      BudgetAlert[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@unique([categoryId, periodStart, periodEnd])
+  @@map("budgets")
+}
+
+model BudgetAlert {
+  id        String  @id @default(cuid())
+  threshold Float
+  type      String
+  isActive  Boolean @default(true)
+  budgetId  String
+  budget    Budget  @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@map("budget_alerts")
+}
+
+model AIChat {
+  id        String      @id @default(cuid())
+  title     String
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  AIMessage[]
+  context   Json
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  @@map("ai_chats")
+}
+
+model AIMessage {
+  id        String   @id @default(cuid())
+  role      String
+  content   String
+  metadata  Json?
+  chatId    String
+  chat      AIChat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@map("ai_messages")
+}
+
+model UserPreferences {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme                 String   @default("system")
+  defaultView           String   @default("dashboard")
+  autoCategorize        Boolean  @default(true)
+  smartNotifications    Boolean  @default(true)
+  weeklyReport          Boolean  @default(true)
+  monthlyReport         Boolean  @default(true)
+  aiPersonality         String   @default("coach")
+  currencyFormat        Json
+  dateFormat            String   @default("DD/MM/YYYY")
+  firstDayOfWeek        Int      @default(1)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@map("user_preferences")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  title     String
+  message   String
+  data      Json?
+  read      Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+model DailySummary {
+  id                String   @id @default(cuid())
+  userId            String
+  date              DateTime @db.Date
+  totalIncome       Decimal  @default(0) @db.Decimal(15, 2)
+  totalExpense      Decimal  @default(0) @db.Decimal(15, 2)
+  totalSaving       Decimal  @default(0) @db.Decimal(15, 2)
+  transactionCount  Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@unique([userId, date])
+  @@map("daily_summaries")
+}
+
+model MonthlySummary {
+  id            String   @id @default(cuid())
+  userId        String
+  year          Int
+  month         Int
+  totalIncome   Decimal  @default(0) @db.Decimal(15, 2)
+  totalExpense  Decimal  @default(0) @db.Decimal(15, 2)
+  totalSaving   Decimal  @default(0) @db.Decimal(15, 2)
+  netWorth      Decimal  @default(0) @db.Decimal(15, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@unique([userId, year, month])
+  @@map("monthly_summaries")
+}
