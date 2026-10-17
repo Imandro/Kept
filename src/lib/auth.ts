@@ -24,9 +24,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           throw new Error('Email y contraseña son requeridos')
         }
 
-        const user = await prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         })
+
+        // Auto-crear usuario demo si no existe (para que el login demo siempre funcione)
+        if (!user && credentials.email === 'demo@kept.app' && credentials.password === 'password123') {
+          const passwordHash = await bcrypt.hash('password123', 12)
+          user = await prisma.user.create({
+            data: {
+              email: 'demo@kept.app',
+              name: 'Usuario Demo',
+              passwordHash,
+              currency: 'MXN',
+              locale: 'es',
+              timezone: 'America/Mexico_City',
+            },
+          })
+          // Preferencias y cuentas por defecto
+          await prisma.userPreferences.create({
+            data: { userId: user.id, theme: 'system', defaultView: 'dashboard', autoCategorize: true, smartNotifications: true, weeklyReport: true, monthlyReport: true, aiPersonality: 'coach', currencyFormat: { locale: 'es-MX', currency: 'MXN' }, dateFormat: 'DD/MM/YYYY', firstDayOfWeek: 1 } as any,
+          })
+          await prisma.financialAccount.createMany({
+            data: [
+              { userId: user.id, name: 'Efectivo', type: 'cash', balance: 0, currency: 'MXN', icon: 'wallet', color: '#22c55e', isDefault: true },
+              { userId: user.id, name: 'Cuenta Bancaria', type: 'checking', balance: 0, currency: 'MXN', icon: 'credit-card', color: '#3b82f6', isDefault: false },
+              { userId: user.id, name: 'Ahorros', type: 'savings', balance: 0, currency: 'MXN', icon: 'piggy-bank', color: '#8b5cf6', isDefault: false },
+            ],
+          })
+        }
 
         if (!user || !user.passwordHash) {
           throw new Error('Credenciales inválidas')

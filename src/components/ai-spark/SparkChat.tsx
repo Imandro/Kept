@@ -46,7 +46,7 @@ export function SparkChat() {
     <div className="flex flex-col h-full bg-muted rounded-xl overflow-hidden border border-border">
       <div className="p-3 border-b border-border bg-card/50 flex items-center gap-3">
         <div className="h-9 w-9 rounded-xl bg-foreground flex items-center justify-center flex-shrink-0">
-          <Sparkles className="h-5 w-5 text-white" />
+          <Sparkles className="h-5 w-5 text-background" />
         </div>
         <div className="min-w-0">
           <h2 className="text-sm font-bold text-foreground">Meta Muse Spark</h2>
