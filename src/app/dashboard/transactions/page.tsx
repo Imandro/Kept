@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { TransactionForm } from '@/components/forms/transaction-form'
-import { Badge } from '@/components/ui/badge'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import { Plus, Filter, Trash2, Edit, ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
@@ -296,24 +295,18 @@ export default function TransactionsPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, delay: Math.min(index * 0.03, 0.3) }}
-                className="group relative bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-700"
+                className="group relative bg-white dark:bg-gray-900 rounded-lg p-3 border-b border-gray-100 dark:border-gray-800 last:border-0"
               >
                 <Link href={'/dashboard/transactions/' + tx.id} className="block">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className={cn(
-                          'h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0',
-                          tx.type === 'INCOME' && 'bg-green-100 text-green-600',
-                          tx.type === 'EXPENSE' && 'bg-red-100 text-red-600',
-                          tx.type === 'SAVING' && 'bg-purple-100 text-purple-600',
-                          tx.type === 'TRANSFER' && 'bg-blue-100 text-blue-600'
-                        )}
-                      >
-                        {tx.category?.icon && (
-                          <span style={{ color: tx.category.color }} className="text-xl">
+                      <div className="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                        {tx.category?.icon ? (
+                          <span style={{ color: tx.category.color }} className="text-lg">
                             {tx.category.icon}
                           </span>
+                        ) : (
+                          <span className="text-gray-400 text-lg">•</span>
                         )}
                       </div>
                       <div className="min-w-0">
@@ -338,30 +331,26 @@ export default function TransactionsPage() {
                     </div>
                   </div>
                 </Link>
-                <div className="flex items-center justify-between mt-2 pt-2 border-t">
-                  <Badge variant="secondary" className="text-xs">
-                    {TYPE_LABELS[tx.type]}
-                  </Badge>
-                  <div className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        setEditingTransaction(tx)
-                        setTransactionFormOpen(true)
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-red-600"
-                      onClick={() => handleDelete(tx.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                <div className="flex items-center justify-end gap-1 mt-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-gray-400 hover:text-gray-700"
+                    onClick={() => {
+                      setEditingTransaction(tx)
+                      setTransactionFormOpen(true)
+                    }}
+                  >
+                    <Edit className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-gray-400 hover:text-red-600"
+                    onClick={() => handleDelete(tx.id)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </motion.div>
             ))}
