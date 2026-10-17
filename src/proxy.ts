@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server'
 export default auth((req) => {
   const isLoggedIn = !!req.auth
   const isOnDashboard = req.nextUrl.pathname.startsWith('/dashboard')
-  const isOnApi = req.nextUrl.pathname.startsWith('/api')
   const isOnAuth = req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/register')
 
   if (isOnDashboard && !isLoggedIn) {

@@ -125,7 +125,7 @@ export function useSpark(): UseSparkReturn {
   const refreshSparks = fetchSparks
 
   return {
-    sparks: sparks.filter(s => !s.dismissed && !s.completed),
+    sparks,
     messages,
     loading,
     error,

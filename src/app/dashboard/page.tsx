@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { MobileLayout } from '@/components/mobile-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -34,6 +33,7 @@ import {
   StaggerItem,
   Skeleton 
 } from '@/components/ui/animated'
+import { motion } from 'framer-motion'
 
 interface FinancialSummary {
   income: number
@@ -106,12 +106,12 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <MobileLayout>
+
         <div className="space-y-6 p-4">
           <FadeIn>
             <div className="flex items-center justify-between">
               <Skeleton variant="text" width="120" height="24" />
-            </FadeIn>
+            </div>
           </FadeIn>
 
           <FadeIn delay={0.1}>
@@ -146,14 +146,13 @@ export default function DashboardPage() {
             </Card>
           </FadeIn>
         </div>
-      </MobileLayout>
+
     )
   }
 
   const balanceColor = summary && summary.balance >= 0 ? 'text-green-600' : 'text-red-600'
 
   return (
-    <MobileLayout>
       <div className="p-4 space-y-6">
         {/* Header */}
         <FadeIn>
@@ -302,8 +301,9 @@ export default function DashboardPage() {
                           )}
                         </div>
                       </div>
+                      </StaggerItem>
                     )
-                  })}}
+                  })}
                   {!summary?.goals.length && (
                     <div className="text-center py-6">
                       <Target className="h-10 w-10 text-gray-300 mx-auto mb-2" />
@@ -405,6 +405,7 @@ export default function DashboardPage() {
                         </div>
                         <p className="text-xs text-gray-500 text-right mt-1">{Math.round(percentage)}%</p>
                       </div>
+                      </StaggerItem>
                     )
                   })}
                   {!summary?.budgets.length && <p className="text-center text-gray-500 py-4 text-sm">Sin presupuestos</p>}
@@ -413,6 +414,5 @@ export default function DashboardPage() {
           </Card>
         </FadeIn>
       </div>
-    </MobileLayout>
   )
 }
