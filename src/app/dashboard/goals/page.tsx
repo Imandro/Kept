@@ -99,7 +99,7 @@ export default function GoalsPage() {
           <div className="p-4 space-y-4">
             {[1, 2, 3].map(i => (
               <Card key={i}>
-                <CardContent className="h-40 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" />
+                <CardContent className="h-40 animate-pulse bg-muted rounded" />
               </Card>
             ))}
           </div>
@@ -153,7 +153,7 @@ export default function GoalsPage() {
                   )}
                 </div>
                 <h2 className="text-xl font-bold">{selectedGoal.name}</h2>
-                <p className="text-gray-500 text-sm">{selectedGoal.description || 'Sin descripción'}</p>
+                <p className="text-muted-foreground text-sm">{selectedGoal.description || 'Sin descripción'}</p>
               </div>
 
               <div className="space-y-2">
@@ -163,7 +163,7 @@ export default function GoalsPage() {
                     {Math.min(Math.round(getProgress(selectedGoal)), 100)}%
                   </span>
                 </div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-3 bg-muted rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: Math.min(getProgress(selectedGoal), 100) + '%' }}
@@ -172,7 +172,7 @@ export default function GoalsPage() {
                     transition={{ duration: 0.8 }}
                   />
                 </div>
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs text-muted-foreground">
                   <span>
                     {formatCurrency(selectedGoal.currentAmount)} / {formatCurrency(selectedGoal.targetAmount)}
                   </span>
@@ -189,14 +189,14 @@ export default function GoalsPage() {
                         <div
                           className={cn(
                             'h-2 w-2 rounded-full',
-                            m.isCompleted ? 'bg-gray-900 dark:bg-gray-100' : 'bg-gray-300 dark:bg-gray-600'
+                            m.isCompleted ? 'bg-foreground' : 'bg-muted'
                           )}
                         />
-                        <span className={cn(m.isCompleted && 'line-through text-gray-500')}>
+                        <span className={cn(m.isCompleted && 'line-through text-muted-foreground')}>
                           {m.name}
                         </span>
                       </div>
-                      <span className={cn('font-medium', m.isCompleted && 'text-gray-900 dark:text-gray-100')}>
+                      <span className={cn('font-medium', m.isCompleted && 'text-foreground')}>
                         {formatCurrency(m.amount)}
                       </span>
                     </div>
@@ -250,22 +250,22 @@ export default function GoalsPage() {
           <div className="grid grid-cols-3 gap-3">
             <Card>
               <CardContent className="p-3 text-center">
-                <Target className="h-5 w-5 text-gray-500 mx-auto mb-1" />
-                <p className="text-[10px] text-gray-500">Activas</p>
+                <Target className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
+                <p className="text-[10px] text-muted-foreground">Activas</p>
                 <p className="text-xl font-bold">{active.length}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-3 text-center">
-                <CheckCircle className="h-5 w-5 text-gray-500 mx-auto mb-1" />
-                <p className="text-[10px] text-gray-500">Listas</p>
+                <CheckCircle className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
+                <p className="text-[10px] text-muted-foreground">Listas</p>
                 <p className="text-xl font-bold">{completed.length}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-3 text-center">
-                <Target className="h-5 w-5 text-gray-500 mx-auto mb-1" />
-                <p className="text-[10px] text-gray-500">Objetivo</p>
+                <Target className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
+                <p className="text-[10px] text-muted-foreground">Objetivo</p>
                 <p className="text-sm font-bold">
                   {formatCurrency(active.reduce((s, g) => s + g.targetAmount, 0))}
                 </p>
@@ -309,7 +309,7 @@ export default function GoalsPage() {
                             </div>
                             <div className="min-w-0">
                               <p className="font-medium truncate">{goal.name}</p>
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-muted-foreground">
                                 {overdue ? 'Vencida' : days + ' días'}
                               </p>
                             </div>
@@ -321,7 +321,7 @@ export default function GoalsPage() {
                             {Math.min(Math.round(progress), 100)}%
                           </Badge>
                         </div>
-                        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div className="h-3 bg-muted rounded-full overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: Math.min(progress, 100) + '%' }}
@@ -330,7 +330,7 @@ export default function GoalsPage() {
                             transition={{ duration: 0.8 }}
                           />
                         </div>
-                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <div className="flex justify-between text-xs text-muted-foreground mt-1">
                           <span>
                             {formatCurrency(goal.currentAmount)}/{formatCurrency(goal.targetAmount)}
                           </span>
@@ -353,12 +353,12 @@ export default function GoalsPage() {
                 <Card key={g.id}>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 flex items-center justify-center">
+                      <div className="h-9 w-9 rounded-lg bg-muted text-muted-foreground flex items-center justify-center">
                         <CheckCircle className="h-4 w-4" />
                       </div>
                       <div>
                         <p className="font-medium">{g.name}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           {formatCurrency(g.targetAmount)}
                         </p>
                       </div>
@@ -374,8 +374,8 @@ export default function GoalsPage() {
           <FadeIn>
             <Card>
               <CardContent className="py-12 text-center">
-                <Target className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">Sin metas</p>
+                <Target className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground">Sin metas</p>
                 <Button onClick={() => setFormOpen(true)} className="mt-3">
                   <Plus className="h-4 w-4 mr-2" />
                   Crear Meta

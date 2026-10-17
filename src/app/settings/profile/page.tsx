@@ -13,12 +13,12 @@ export default function ProfilePage() {
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center gap-3">
-        <Link href="/dashboard" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+        <Link href="/dashboard" className="p-2 rounded-lg hover:bg-muted">
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Perfil</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Tu cuenta Kept</p>
+          <h1 className="text-2xl font-bold text-foreground">Perfil</h1>
+          <p className="text-sm text-muted-foreground">Tu cuenta Kept</p>
         </div>
       </div>
 
@@ -35,8 +35,8 @@ export default function ProfilePage() {
               <AvatarFallback className="text-xl">{session?.user?.name?.[0] || 'U'}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">{session?.user?.name || 'Usuario'}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+              <p className="font-semibold text-foreground">{session?.user?.name || 'Usuario'}</p>
+              <p className="text-sm text-muted-foreground flex items-center gap-1">
                 <Mail className="h-3.5 w-3.5" /> {session?.user?.email || '—'}
               </p>
             </div>

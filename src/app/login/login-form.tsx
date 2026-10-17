@@ -65,7 +65,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -73,22 +73,22 @@ export function LoginForm() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="relative w-full max-w-md z-10"
       >
-        <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 shadow-2xl overflow-hidden">
+        <Card className="bg-card/80 backdrop-blur-xl border border-border/50 overflow-hidden">
           <CardHeader className="text-center p-8 pb-4">
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.2 }}
-              className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500"
+              className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-foreground"
             >
               <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </motion.div>
-            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+            <CardTitle className="text-2xl font-bold text-foreground">
               Kept
             </CardTitle>
-            <CardDescription className="text-gray-600 dark:text-gray-400 mt-2">
+            <CardDescription className="text-muted-foreground mt-2">
               Tu musa financiera inteligente
             </CardDescription>
           </CardHeader>
@@ -113,7 +113,7 @@ export function LoginForm() {
               <AnimatePresence mode="wait">
                 <FadeIn delay={0.1}>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" aria-hidden="true" />
                     <Input
                       label="Email"
                       type="email"
@@ -131,7 +131,7 @@ export function LoginForm() {
               <AnimatePresence mode="wait">
                 <FadeIn delay={0.15}>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" aria-hidden="true" />
                     <Input
                       label="Contraseña"
                       type={showPassword ? 'text' : 'password'}
@@ -145,7 +145,7 @@ export function LoginForm() {
                     <motion.button
                       type="button"
                       whileTap={{ scale: 0.9 }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                     >
@@ -157,8 +157,8 @@ export function LoginForm() {
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Recordarme</span>
+                  <input type="checkbox" className="rounded border-border text-primary focus:ring-primary" />
+                  <span className="text-sm text-muted-foreground">Recordarme</span>
                 </label>
                 <Link href="/forgot-password" className="text-sm text-primary hover:underline">
                   ¿Olvidaste tu contraseña?
@@ -209,7 +209,7 @@ export function LoginForm() {
               )}
             </motion.button>
 
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-center text-sm text-muted-foreground">
               ¿No tienes cuenta?{' '}
               <Link href="/register" className="text-primary font-medium hover:underline">
                 Regístrate gratis
@@ -224,9 +224,9 @@ export function LoginForm() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
-        className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400"
+        className="mt-6 text-center text-xs text-muted-foreground"
       >
-        Demo: <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-primary">demo@kept.app</code> / <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-primary">password123</code>
+        Demo: <code className="px-1.5 py-0.5 bg-muted rounded text-primary">demo@kept.app</code> / <code className="px-1.5 py-0.5 bg-muted rounded text-primary">password123</code>
       </motion.p>
     </div>
   )

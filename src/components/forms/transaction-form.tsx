@@ -79,16 +79,16 @@ export function TransactionForm({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 60, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="relative z-10 flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl dark:bg-gray-900 sm:rounded-2xl"
+            className="relative z-10 flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-card sm:rounded-2xl"
           >
-            <div className="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between border-b border-border p-4">
+              <h2 className="text-lg font-semibold text-foreground">
                 {isEditing ? 'Editar Transacción' : 'Nueva Transacción'}
               </h2>
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="rounded-lg p-2 text-muted-foreground hover:bg-muted"
                 aria-label="Cerrar"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,7 +102,7 @@ export function TransactionForm({
               className="flex-1 space-y-4 overflow-y-auto p-4"
             >
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                   Tipo
                 </label>
                 <Select
@@ -141,7 +141,7 @@ export function TransactionForm({
               />
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                   Cuenta
                 </label>
                 <Select
@@ -165,7 +165,7 @@ export function TransactionForm({
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                   Categoría
                 </label>
                 <Select
@@ -197,7 +197,7 @@ export function TransactionForm({
 
               {goals.length > 0 && (
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                     Meta (opcional)
                   </label>
                   <Select
@@ -223,7 +223,7 @@ export function TransactionForm({
 
               {savingMethods.length > 0 && (
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                     Método de Ahorro (opcional)
                   </label>
                   <Select

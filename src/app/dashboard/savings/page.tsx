@@ -44,16 +44,16 @@ export default function SavingsPage() {
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center gap-3">
-        <Link href="/dashboard" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+        <Link href="/dashboard" className="p-2 rounded-lg hover:bg-muted">
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Ahorro</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Tus aportaciones y metas</p>
+          <h1 className="text-2xl font-bold text-foreground">Ahorro</h1>
+          <p className="text-sm text-muted-foreground">Tus aportaciones y metas</p>
         </div>
       </div>
 
-      <Card className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-0">
+      <Card className="bg-foreground text-background border-0">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -68,7 +68,7 @@ export default function SavingsPage() {
       </Card>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Movimientos de ahorro</h2>
+        <h2 className="text-lg font-semibold text-foreground">Movimientos de ahorro</h2>
         <Link href="/dashboard/transactions">
           <Button size="sm" variant="outline">
             <Plus className="h-4 w-4 mr-1" /> Nuevo
@@ -79,14 +79,14 @@ export default function SavingsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 rounded-xl bg-gray-100 dark:bg-gray-800 animate-pulse" />
+            <div key={i} className="h-16 rounded-xl bg-muted animate-pulse" />
           ))}
         </div>
       ) : savings.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <PiggyBank className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 dark:text-gray-400 mb-4">Aún no tienes ahorros registrados</p>
+            <PiggyBank className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+            <p className="text-muted-foreground mb-4">Aún no tienes ahorros registrados</p>
             <Link href="/dashboard/transactions">
               <Button>
                 <Plus className="h-4 w-4 mr-2" /> Registrar ahorro
@@ -100,17 +100,17 @@ export default function SavingsPage() {
             <Card key={s.id}>
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                  <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{s.description || 'Ahorro'}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="font-medium text-foreground">{s.description || 'Ahorro'}</p>
+                    <p className="text-xs text-muted-foreground">
                       {formatDate(s.date)}{s.goal ? ` · ${s.goal.name}` : ''}{s.savingMethod ? ` · ${s.savingMethod.name}` : ''}
                     </p>
                   </div>
                 </div>
-                <p className="font-semibold text-gray-600 dark:text-gray-300">+{formatCurrency(s.amount)}</p>
+                <p className="font-semibold text-muted-foreground">+{formatCurrency(s.amount)}</p>
               </CardContent>
             </Card>
           ))}

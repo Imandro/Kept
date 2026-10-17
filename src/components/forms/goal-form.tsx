@@ -72,16 +72,16 @@ export function GoalForm({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 60, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="relative z-10 flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl dark:bg-gray-900 sm:rounded-2xl"
+            className="relative z-10 flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-card sm:rounded-2xl"
           >
-            <div className="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="flex items-center justify-between border-b border-border p-4">
+              <h2 className="text-lg font-semibold text-foreground">
                 {isEditing ? 'Editar Meta' : 'Nueva Meta'}
               </h2>
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="rounded-lg p-2 text-muted-foreground hover:bg-muted"
                 aria-label="Cerrar"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,7 +102,7 @@ export function GoalForm({
               />
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                   Icono
                 </label>
                 <div className="grid grid-cols-8 gap-2">
@@ -115,7 +115,7 @@ export function GoalForm({
                         'rounded-lg border-2 p-1 text-xl transition-all',
                         watchedIcon === icon
                           ? 'border-primary bg-primary/10'
-                          : 'border-gray-200 dark:border-gray-700'
+                          : 'border-border'
                       )}
                     >
                       {icon}
@@ -125,7 +125,7 @@ export function GoalForm({
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+                <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
                   Color
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -138,7 +138,7 @@ export function GoalForm({
                       className={cn(
                         'h-7 w-7 rounded-full border-2 transition-all',
                         watchedColor === color
-                          ? 'scale-110 border-gray-900 dark:border-white'
+                          ? 'scale-110 border-foreground'
                           : 'border-transparent'
                       )}
                       aria-label={`Color ${color}`}

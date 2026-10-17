@@ -7,6 +7,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { ToastProvider } from '@/components/ui/toast'
 import { startSyncEngine, stopSyncEngine } from '@/lib/sync'
+import { ThemeProvider } from '@/components/theme-provider'
 import { SWRegistration } from '@/components/sw-registration'
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -48,15 +49,17 @@ export function Providers({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <SessionProvider>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
-      >
-        <SWRegistration />
-        {children}
-        <ToastProvider />
-      </PersistQueryClientProvider>
-    </SessionProvider>
+    <ThemeProvider>
+      <SessionProvider>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
+        >
+          <SWRegistration />
+          {children}
+          <ToastProvider />
+        </PersistQueryClientProvider>
+      </SessionProvider>
+    </ThemeProvider>
   )
 }

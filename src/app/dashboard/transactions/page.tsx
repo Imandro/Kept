@@ -260,7 +260,7 @@ export default function TransactionsPage() {
             <div className="space-y-3">
               {[1, 2, 3].map(i => (
                 <Card key={i}>
-                  <CardContent className="h-20 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" />
+                  <CardContent className="h-20 animate-pulse bg-muted rounded" />
                 </Card>
               ))}
             </div>
@@ -271,7 +271,7 @@ export default function TransactionsPage() {
           <FadeIn>
             <Card>
               <CardContent className="py-12 text-center">
-                <p className="text-gray-500">Sin transacciones</p>
+                <p className="text-muted-foreground">Sin transacciones</p>
                 <Button
                   className="mt-4"
                   onClick={() => {
@@ -295,23 +295,23 @@ export default function TransactionsPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, delay: Math.min(index * 0.03, 0.3) }}
-                className="group relative bg-white dark:bg-gray-900 rounded-lg p-3 border-b border-gray-100 dark:border-gray-800 last:border-0"
+                className="group relative bg-card rounded-lg p-3 border-b border-border last:border-0"
               >
                 <Link href={'/dashboard/transactions/' + tx.id} className="block">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                      <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
                         {tx.category?.icon ? (
                           <span style={{ color: tx.category.color }} className="text-lg leading-none">
                             {tx.category.icon}
                           </span>
                         ) : (
-                          <span className="text-gray-400 text-lg leading-none">•</span>
+                          <span className="text-muted-foreground text-lg leading-none">•</span>
                         )}
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium truncate">{tx.description}</p>
-                        <p className="text-xs text-gray-500 truncate">
+                        <p className="text-xs text-muted-foreground truncate">
                           {tx.category?.name} · {tx.account.name} · {formatDate(tx.date, 'short')}
                         </p>
                       </div>
@@ -319,10 +319,10 @@ export default function TransactionsPage() {
                     <div
                       className={cn(
                         'font-medium text-right',
-                        tx.type === 'INCOME' && 'text-green-600',
-                        tx.type === 'EXPENSE' && 'text-red-600',
-                        tx.type === 'SAVING' && 'text-purple-600',
-                        tx.type === 'TRANSFER' && 'text-blue-600'
+                        tx.type === 'INCOME' && 'text-foreground',
+                        tx.type === 'EXPENSE' && 'text-destructive',
+                        tx.type === 'SAVING' && 'text-muted-foreground',
+                        tx.type === 'TRANSFER' && 'text-muted-foreground'
                       )}
                     >
                       {tx.type === 'EXPENSE' && '−'}
@@ -335,7 +335,7 @@ export default function TransactionsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-gray-400 hover:text-gray-700"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setEditingTransaction(tx)
                       setTransactionFormOpen(true)
@@ -346,7 +346,7 @@ export default function TransactionsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-gray-400 hover:text-red-600"
+                    className="h-8 w-8 text-muted-foreground hover:text-red-600"
                     onClick={() => handleDelete(tx.id)}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -368,7 +368,7 @@ export default function TransactionsPage() {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 Página {pagination.page} de {pagination.totalPages}
               </span>
               <Button

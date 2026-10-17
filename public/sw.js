@@ -2,14 +2,14 @@
 
 declare const self: ServiceWorkerGlobalScope
 
-const CACHE_NAME = 'kept-v1'
+const CACHE_NAME = 'kept-v2'
 const STATIC_ASSETS = [
   '/',
   '/dashboard',
   '/dashboard/transactions',
   '/dashboard/goals',
   '/dashboard/savings',
-  '/dashboard/ai-chat',
+  '/dashboard/ai-spark',
   '/manifest.json',
 ]
 
@@ -42,11 +42,11 @@ self.addEventListener('fetch', (event: FetchEvent) => {
     return
   }
 
-  // Static assets - CacheFirst
-  if (request.method === 'GET' && 
-      (url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|gif|webp|ico|woff2?)$/) || 
+  // Static assets - NetworkFirst (evita assets obsoletos tras deploy)
+  if (request.method === 'GET' &&
+      (url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|gif|webp|ico|woff2?)$/) ||
        STATIC_ASSETS.includes(url.pathname))) {
-    event.respondWith(cacheFirstStrategy(request))
+    event.respondWith(networkFirstStrategy(request))
     return
   }
 

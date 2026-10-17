@@ -39,10 +39,10 @@ export default function AISparkPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold flex items-center gap-2">
-                <span className="h-6 w-6 text-purple-500">✨</span>
+                <span className="h-6 w-6 text-muted-foreground">✨</span>
                 Meta Muse Spark
               </h1>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 {format(new Date(), 'EEEE, d MMMM', { locale: es })}
               </p>
             </div>
@@ -51,32 +51,32 @@ export default function AISparkPage() {
 
         <FadeIn delay={0.1}>
           <div className="grid grid-cols-4 gap-2">
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 text-center">
-              <Sparkles className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+            <div className="bg-muted rounded-xl p-3 text-center">
+              <Sparkles className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.total}</p>
-              <p className="text-[10px] text-gray-500">Total</p>
+              <p className="text-[10px] text-muted-foreground">Total</p>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 text-center">
-              <CheckCircle className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+            <div className="bg-muted rounded-xl p-3 text-center">
+              <CheckCircle className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.completed}</p>
-              <p className="text-[10px] text-gray-500">Listos</p>
+              <p className="text-[10px] text-muted-foreground">Listos</p>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 text-center">
-              <Zap className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+            <div className="bg-muted rounded-xl p-3 text-center">
+              <Zap className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.pending}</p>
-              <p className="text-[10px] text-gray-500">Pendientes</p>
+              <p className="text-[10px] text-muted-foreground">Pendientes</p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 text-center">
-              <TrendingUp className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+            <div className="bg-muted rounded-xl p-3 text-center">
+              <TrendingUp className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.weekly}</p>
-              <p className="text-[10px] text-gray-500">Semanal</p>
+              <p className="text-[10px] text-muted-foreground">Semanal</p>
             </div>
           </div>
         </FadeIn>
 
         <FadeIn delay={0.2}>
           <Tabs value={activeTab} onValueChange={v => setActiveTab(v as 'chat' | 'sparks' | 'history')} className="w-full">
-            <TabsList className="grid grid-cols-3 bg-gray-100 dark:bg-gray-800">
+            <TabsList className="grid grid-cols-3 bg-muted">
               <TabsTrigger value="chat">
                 <Sparkles className="h-4 w-4 mr-1" />
                 Chat
@@ -104,10 +104,10 @@ export default function AISparkPage() {
               />
 
               {pending.length === 0 && (
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-xl p-6 text-center">
+                <div className="bg-muted border border-border rounded-xl p-6 text-center">
                   <span className="text-4xl mb-3 inline-block">✨</span>
                   <h3 className="font-semibold mb-1">¡Todo al día!</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-sm text-muted-foreground mb-4">
                     No hay sparks pendientes. Vuelve mañana para nuevos insights.
                   </p>
                   <Button onClick={() => setActiveTab('chat')} size="sm">
@@ -120,20 +120,20 @@ export default function AISparkPage() {
 
             <TabsContent value="history" className="mt-4">
               {history.length === 0 ? (
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 text-center">
-                  <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <div className="bg-muted/50 rounded-xl p-6 text-center">
+                  <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
                   <h3 className="font-semibold mb-1">Sin historial aún</h3>
-                  <p className="text-sm text-gray-500">Completa sparks para verlos aquí</p>
+                  <p className="text-sm text-muted-foreground">Completa sparks para verlos aquí</p>
                 </div>
               ) : (
                 <div className="space-y-2">
                   {history.map(spark => (
                     <div
                       key={spark.id}
-                      className="p-3 flex items-center justify-between rounded-lg bg-gray-50 dark:bg-gray-800/50"
+                      className="p-3 flex items-center justify-between rounded-lg bg-muted/50"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl flex-shrink-0">
+                        <span className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center text-xl flex-shrink-0">
                           {spark.type === 'celebration' && '🏆'}
                           {spark.type === 'micro_challenge' && '⚡'}
                           {spark.type === 'pattern_alert' && '🔍'}
@@ -143,7 +143,7 @@ export default function AISparkPage() {
                         </span>
                         <div className="min-w-0">
                           <p className="font-medium text-sm truncate">{spark.title}</p>
-                          <p className="text-xs text-gray-500 truncate">{spark.message.slice(0, 60)}</p>
+                          <p className="text-xs text-muted-foreground truncate">{spark.message.slice(0, 60)}</p>
                         </div>
                       </div>
                       <Badge variant={spark.completed ? 'success' : 'secondary'} className="text-xs flex-shrink-0">

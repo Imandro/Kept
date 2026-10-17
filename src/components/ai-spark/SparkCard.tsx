@@ -77,10 +77,10 @@ export function SparkCard({ spark, onDismiss, onComplete, onAction, compact = fa
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{spark.title}</h3>
+                <h3 className="font-semibold text-foreground text-sm">{spark.title}</h3>
                 <div className="flex items-center gap-1">
                   {timeLeft !== null && (
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <Clock className="h-2.5 w-2.5" />
                       {timeLeft}h
                     </span>
@@ -94,17 +94,17 @@ export function SparkCard({ spark, onDismiss, onComplete, onAction, compact = fa
                 </div>
               </div>
 
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{spark.message}</p>
+              <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{spark.message}</p>
 
               {spark.insight && (
-                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/50 p-2 rounded-lg">
+                <div className="mt-2 text-xs text-muted-foreground italic bg-muted/50 p-2 rounded-lg">
                   💡 {spark.insight}
                 </div>
               )}
 
               {spark.metadata && Object.keys(spark.metadata).length > 0 && (
-                <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-                  <p className="text-xs text-gray-500">
+                <div className="mt-2 pt-2 border-t border-border">
+                  <p className="text-xs text-muted-foreground">
                     Detalles: {JSON.stringify(spark.metadata, null, 0).slice(0, 100)}...
                   </p>
                 </div>
@@ -128,7 +128,7 @@ export function SparkCard({ spark, onDismiss, onComplete, onAction, compact = fa
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="p-1.5 rounded-lg hover:bg-muted"
                   onClick={() => onComplete(spark.id)}
                   title="Completado"
                 >
@@ -137,11 +137,11 @@ export function SparkCard({ spark, onDismiss, onComplete, onAction, compact = fa
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="p-1.5 rounded-lg hover:bg-muted"
                   onClick={() => onDismiss(spark.id)}
                   title="Descartar"
                 >
-                  <X className="h-4 w-4 text-gray-400" />
+                  <X className="h-4 w-4 text-muted-foreground" />
                 </motion.button>
               </div>
             </div>
