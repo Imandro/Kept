@@ -87,6 +87,7 @@ model Account {
   
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   
+  @@index([userId])
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
@@ -108,6 +109,7 @@ model FinancialAccount {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
+  @@index([userId])
   @@map("financial_accounts")
 }
 
@@ -151,6 +153,7 @@ model Category {
   updatedAt   DateTime      @updatedAt
   
   @@unique([name, userId])
+  @@index([userId])
   @@map("categories")
 }
 
@@ -207,6 +210,8 @@ model RecurringTransaction {
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   
+  @@index([userId])
+  @@index([accountId])
   @@map("recurring_transactions")
 }
 
@@ -230,6 +235,7 @@ model Goal {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   
+  @@index([userId])
   @@map("goals")
 }
 
@@ -244,6 +250,7 @@ model Milestone {
   goal        Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   
+  @@index([goalId])
   @@map("milestones")
 }
 
@@ -256,6 +263,7 @@ model GoalContribution {
   goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   
+  @@index([goalId])
   @@map("goal_contributions")
 }
 
@@ -272,6 +280,7 @@ model SavingMethod {
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   
+  @@index([userId])
   @@map("saving_methods")
 }
 
@@ -285,6 +294,8 @@ model SavingAllocation {
   priority             Int                @default(0)
   createdAt            DateTime           @default(now())
   
+  @@index([savingMethodId])
+  @@index([targetAccountId])
   @@map("saving_allocations")
 }
 
@@ -304,6 +315,8 @@ model Budget {
   updatedAt   DateTime  @updatedAt
   
   @@unique([categoryId, periodStart, periodEnd])
+  @@index([userId])
+  @@index([categoryId])
   @@map("budgets")
 }
 
@@ -316,6 +329,7 @@ model BudgetAlert {
   budget    Budget  @relation(fields: [budgetId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   
+  @@index([budgetId])
   @@map("budget_alerts")
 }
 
@@ -329,6 +343,7 @@ model AIChat {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   
+  @@index([userId])
   @@map("ai_chats")
 }
 
@@ -343,6 +358,8 @@ model AIMessage {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   
+  @@index([chatId])
+  @@index([userId])
   @@map("ai_messages")
 }
 
@@ -357,7 +374,7 @@ model UserPreferences {
   weeklyReport          Boolean  @default(true)
   monthlyReport         Boolean  @default(true)
   aiPersonality         String   @default("coach")
-  currencyFormat        Json
+  currencyFormat        Json     @default("{\"locale\":\"es-MX\",\"currency\":\"MXN\"}")
   dateFormat            String   @default("DD/MM/YYYY")
   firstDayOfWeek        Int      @default(1)
   createdAt             DateTime @default(now())
@@ -393,6 +410,7 @@ model DailySummary {
   updatedAt         DateTime @updatedAt
   
   @@unique([userId, date])
+  @@index([userId])
   @@map("daily_summaries")
 }
 
@@ -409,5 +427,6 @@ model MonthlySummary {
   updatedAt     DateTime @updatedAt
   
   @@unique([userId, year, month])
+  @@index([userId])
   @@map("monthly_summaries")
 }
