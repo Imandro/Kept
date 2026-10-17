@@ -12,6 +12,7 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { GoalForm } from '@/components/forms/goal-form'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { FadeIn, SlideUp, ScaleIn, StaggerContainer, StaggerItem, Skeleton, motion } from '@/components/ui/animated'
 
 interface Goal {
   id: string; name: string; description: string | null; targetAmount: number; currentAmount: number;
@@ -47,7 +48,15 @@ export default function GoalsPage() {
   const getDaysLeft = (d: string) => Math.ceil((new Date(d).getTime() - Date.now()) / 86400000)
 
   if (loading) {
-    return <MobileLayout><div className="p-4 space-y-4">{[1,2,3].map(i=><Card key={i}><CardContent className="h-48 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" /></Card>)}</div></MobileLayout>
+    return (
+      <MobileLayout>
+        <FadeIn>
+          <div className="p-4 space-y-4">
+            {[1, 2, 3].map(i => (<Card key={i}><CardContent className="h-48 animate-pulse bg-gray-200 dark:bg-gray-700 rounded" /></Card>))}
+          </FadeIn>
+        </MobileLayout>
+      )
+    )
   }
 
   const active = goals.filter(g => g.status === 'ACTIVE')
@@ -66,18 +75,28 @@ export default function GoalsPage() {
             {selectedGoal && (
               <>
                 <div className="text-center">
-                  <div className={cn('h-20 w-20 rounded-2xl flex items-center justify-center mx-auto mb-4', `bg-[${selectedGoal.color}]20 text-[${selectedGoal.color}]`)}>
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                    className={cn('h-20 w-20 rounded-2xl flex items-center justify-center mx-auto mb-4', `bg-[${selectedGoal.color}]20 text-[${selectedGoal.color}]`)}
+                  >
                     {selectedGoal.icon && <span className="text-4xl">{selectedGoal.icon}</span>}
-                  </div>
+                  </motion.div>
                   <h2 className="text-xl font-bold">{selectedGoal.name}</h2>
                   <p className="text-gray-500 text-sm">{selectedGoal.description || 'Sin descripción'}</p>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm"><span>Progreso</span><span className="font-bold">{Math.min(Math.round(getProgress(selectedGoal)),100)}%</span></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div className={cn('h-full rounded-full', `bg-[${selectedGoal.color}]`)} style={{width:`${Math.min(getProgress(selectedGoal),100)}%`}} />
-                  </div>
+                  <motion.div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min(getProgress(selectedGoal),100)}%` }}
+                      className={cn('h-full rounded-full', `bg-[${selectedGoal.color}]`)}
+                      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    />
+                  </motion.div>
                   <div className="flex justify-between text-xs text-gray-500">
                     <span>{formatCurrency(selectedGoal.currentAmount)} / {formatCurrency(selectedGoal.targetAmount)}</span>
                     <span>{getDaysLeft(selectedGoal.targetDate)} días</span>
@@ -85,18 +104,33 @@ export default function GoalsPage() {
                 </div>
 
                 {selectedGoal.milestones.length > 0 && (
-                  <div className="space-y-2 border-t pt-4">
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="space-y-2 border-t pt-4"
+                  >
                     <h3 className="font-medium">Hitos</h3>
                     {selectedGoal.milestones.map(m => (
-                      <div key={m.id} className="flex items-center justify-between">
+                      <motion.div
+                        key={m.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="flex items-center justify-between"
+                      >
                         <div className="flex items-center gap-2">
-                          <div className={cn('h-2 w-2 rounded-full', m.isCompleted ? 'bg-green-500' : 'bg-gray-300')} />
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className={cn('h-2 w-2 rounded-full', m.isCompleted ? 'bg-green-500' : 'bg-gray-300')}
+                            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                          />
                           <span className={cn(m.isCompleted ? 'line-through text-gray-500' : '')}>{m.name}</span>
                         </div>
                         <span className={cn('font-medium', m.isCompleted && 'text-green-600')}>{formatCurrency(m.amount)}</span>
-                      </div>
+                      </motion.div>
                     ))}
-                  </div>
+                  </motion.div>
                 )}
 
                 <div className="flex gap-2 pt-4 border-t">
@@ -110,64 +144,105 @@ export default function GoalsPage() {
       </Sheet>
 
       <div className="p-4 space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Metas</h1>
-          <Button onClick={()=>{setEditingGoal(null);setFormOpen(true)}} className="h-10 px-4"><Plus className="h-5 w-5"/></Button>
-        </div>
+        <FadeIn>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold">Metas</h1>
+            <Button onClick={()=>{setEditingGoal(null);setFormOpen(true)}} className="h-10 px-4"><Plus className="h-5 w-5"/></Button>
+          </div>
+        </FadeIn>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <Card className="bg-blue-50 dark:bg-blue-900/20"><CardContent className="p-4 text-center"><p className="text-xs text-blue-700">Activas</p><p className="text-2xl font-bold">{active.length}</p></CardContent></Card>
-          <Card className="bg-green-50 dark:bg-green-900/20"><CardContent className="p-4 text-center"><p className="text-xs text-green-700">Completadas</p><p className="text-2xl font-bold">{completed.length}</p></CardContent></Card>
-          <Card className="bg-purple-50 dark:bg-purple-900/20"><CardContent className="p-4 text-center"><p className="text-xs text-purple-700">Total</p><p className="text-2xl font-bold">{formatCurrency(active.reduce((s,g)=>s+g.targetAmount,0))}</p></CardContent></Card>
-        </div>
+        <FadeIn delay={0.1}>
+          <div className="grid grid-cols-3 gap-3">
+            <Card className="bg-blue-50 dark:bg-blue-900/20"><CardContent className="p-4 text-center"><Target className="h-5 w-5 text-blue-500 mx-auto mb-1" /><p className="text-xs text-blue-700">Activas</p><p className="text-2xl font-bold">{active.length}</p></CardContent></Card>
+            <Card className="bg-green-50 dark:bg-green-900/20"><CardContent className="p-4 text-center"><CheckCircle className="h-5 w-5 text-green-500 mx-auto mb-1" /><p className="text-xs text-green-700">Completadas</p><p className="text-2xl font-bold">{completed.length}</p></CardContent></Card>
+            <Card className="bg-purple-50 dark:bg-purple-900/20"><CardContent className="p-4 text-center"><Target className="h-5 w-5 text-purple-500 mx-auto mb-1" /><p className="text-xs text-purple-700">Total</p><p className="text-2xl font-bold">{formatCurrency(active.reduce((s,g)=>s+g.targetAmount,0))}</p></CardContent></Card>
+          </div>
+        </FadeIn>
 
+        {/* Metas Activas */}
         {active.length > 0 && (
-          <section>
-            <h2 className="text-lg font-semibold">En Progreso</h2>
-            <div className="space-y-3">
-              {active.map(goal => {
-                const progress = getProgress(goal)
-                const days = getDaysLeft(goal.targetDate)
-                const overdue = days < 0
-                return (
-                  <Sheet open={detailSheetOpen && selectedGoal?.id === goal.id} onOpenChange={open=>{if(!open){setSelectedGoal(null);setDetailSheetOpen(false)}}}>
-                    <SheetTrigger asChild>
-                      <Card className="overflow-hidden" onClick={()=>{setSelectedGoal(goal);setDetailSheetOpen(true)}}>
-                        <div className={cn('h-2', `bg-[${goal.color}]`)} />
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-3">
-                              <div className={cn('h-12 w-12 rounded-xl flex items-center justify-center', `bg-[${goal.color}]20 text-[${goal.color}]`)}>{goal.icon && <span className="text-2xl">{goal.icon}</span>}</div>
-                              <div className="min-w-0"><p className="font-medium truncate">{goal.name}</p><p className="text-xs text-gray-500">{overdue ? 'Vencida' : `${days} días`}</p></div>
-                            </div>
-                            <Badge variant={overdue?'destructive':progress>=100?'success':'default'} className="text-xs">{Math.min(Math.round(progress),100)}%</Badge>
-                          </div>
-                          <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div className={cn('h-full rounded-full',`bg-[${goal.color}]`)} style={{width:`${Math.min(progress,100)}%`}}/></div>
-                          <div className="flex justify-between text-xs text-gray-500 mt-1"><span>{formatCurrency(goal.currentAmount)}/{formatCurrency(goal.targetAmount)}</span><span>{Math.round(progress)}%</span></div>
-                        </CardContent>
-                      </Card>
-                    </SheetTrigger>
-                  </Sheet>
-                )
-              })}
-            </div>
-          </section>
+          <FadeIn delay={0.2}>
+            <section>
+              <h2 className="text-lg font-semibold">En Progreso</h2>
+              <StaggerContainer stagger={0.08}>
+                {active.map(goal => {
+                  const progress = getProgress(goal)
+                  const days = getDaysLeft(goal.targetDate)
+                  const overdue = days < 0
+                  return (
+                    <StaggerItem key={goal.id}>
+                      <Sheet open={detailSheetOpen && selectedGoal?.id === goal.id} onOpenChange={open=>{if(!open){setSelectedGoal(null);setDetailSheetOpen(false)}}}>
+                        <SheetTrigger asChild>
+                          <motion.div
+                            onClick={()=>{setSelectedGoal(goal);setDetailSheetOpen(true)}}
+                            className="overflow-hidden"
+                            whileHover={{ y: -4, boxShadow: '0 12px 30px -10px rgba(0,0,0,0.15)' }}
+                          >
+                            <Card className="overflow-hidden">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: '100%' }}
+                                className={cn('h-2', `bg-[${goal.color}]`)}
+                                transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                              />
+                              <CardContent className="p-4">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-3">
+                                    <motion.div
+                                      initial={{ scale: 0, rotate: -180 }}
+                                      animate={{ scale: 1, rotate: 0 }}
+                                      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                                      className={cn('h-12 w-12 rounded-xl flex items-center justify-center', `bg-[${goal.color}]20 text-[${goal.color}]`)}
+                                    >
+                                      {goal.icon ? <span className="text-2xl">{goal.icon}</span> : <Target className="h-6 w-6" />}
+                                    </motion.div>
+                                    <div className="min-w-0">
+                                      <p className="font-medium truncate">{goal.name}</p>
+                                      <p className="text-xs text-gray-500">{overdue ? 'Vencida' : `${days} días`}</p>
+                                    </div>
+                                  </div>
+                                  <Badge variant={overdue?'destructive':progress>=100?'success':'default'} className="text-xs">{Math.min(Math.round(progress),100)}%</Badge>
+                                </div>
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${Math.min(progress,100)}%` }}
+                                  className={cn('h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden', `bg-[${goal.color}]`)}
+                                  transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                />
+                                <div className="flex justify-between text-xs text-gray-500 mt-1"><span>{formatCurrency(goal.currentAmount)}/{formatCurrency(goal.targetAmount)}</span><span>{Math.round(progress)}%</span></div>
+                              </CardContent>
+                            </motion.div>
+                          </SheetTrigger>
+                        </Sheet>
+                      </StaggerItem>
+                    )
+                  })}
+              </StaggerContainer>
+            </section>
+          )}
         )}
 
+        {/* Metas Completadas */}
         {completed.length > 0 && (
-          <section>
-            <h2 className="text-lg font-semibold">Completadas</h2>
-            <div className="space-y-2">
-              {completed.map(g => (
-                <Card key={g.id} className="bg-green-50 dark:bg-green-900/10"><CardContent className="p-4"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center"><CheckCircle className="h-5 w-5"/></div><div><p className="font-medium">{g.name}</p><p className="text-xs text-gray-500">{formatDate(g.targetDate,'short')} · {formatCurrency(g.targetAmount)}</p></div></div></CardContent></Card>
-              ))}
-            </div>
-          </section>
+          <FadeIn delay={0.3}>
+            <section>
+              <h2 className="text-lg font-semibold">Completadas</h2>
+              <StaggerContainer stagger={0.05}>
+                {completed.map(g => (
+                  <StaggerItem key={g.id}>
+                    <Card className="bg-green-50 dark:bg-green-900/10"><CardContent className="p-4"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center"><CheckCircle className="h-5 w-5"/></div><div><p className="font-medium">{g.name}</p><p className="text-xs text-gray-500">{formatDate(g.targetDate,'short')} · {formatCurrency(g.targetAmount)}</p></div></div></CardContent></Card>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            </section>
+          )}
         )}
 
         {!active.length && !completed.length && (
-          <Card><CardContent className="py-12 text-center"><Target className="h-12 w-12 text-gray-300 mx-auto mb-3"/><p className="text-gray-500">Sin metas</p><Button onClick={()=>setFormOpen(true)} className="mt-3" size="lg"><Plus className="h-4 w-4 mr-2"/>Crear Meta</Button></CardContent></Card>
+          <FadeIn>
+            <Card><CardContent className="py-12 text-center"><Target className="h-12 w-12 text-gray-300 mx-auto mb-3"/><p className="text-gray-500">Sin metas</p><Button onClick={()=>setFormOpen(true)} className="mt-3" size="lg"><Plus className="h-4 w-4 mr-2"/>Crear Meta</Button></CardContent></Card>
+          </FadeIn>
         )}
       </div>
     </MobileLayout>

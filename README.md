@@ -50,10 +50,11 @@
 | **Frontend** | Next.js 15 (App Router) + TypeScript + Tailwind CSS |
 | **UI** | Shadcn/UI (Radix UI) + Lucide Icons |
 | **State** | TanStack Query + React Hook Form + Zod |
-| **Auth** | NextAuth.js v5 (Credentials + OAuth) |
+| **Auth** | NextAuth.js v5 (Credentials + Google OAuth) |
 | **DB** | PostgreSQL (Neon) + Prisma ORM |
 | **Offline** | Dexie.js (IndexedDB) + Workbox |
 | **IA** | Vercel AI SDK + OpenAI GPT-4o |
+| **Animaciones** | Framer Motion |
 | **Deploy** | Vercel + Neon |
 
 ---
@@ -64,12 +65,13 @@
 - Node.js 20+
 - Cuenta en [Neon](https://neon.tech) (PostgreSQL serverless)
 - Cuenta en [OpenAI](https://platform.openai.com) (opcional, para IA)
+- Cuenta en [Google Cloud Console](https://console.cloud.google.com) (para OAuth)
 
 ### Instalación
 
 ```bash
 # Clonar repo
-git clone https://github.com/TU_USUARIO/kept-app.git
+git clone https://github.com/imandro/kept.git
 cd kept-app
 
 # Instalar dependencias
@@ -94,22 +96,34 @@ npm run dev
 
 ```env
 # Database (Neon PostgreSQL)
-DATABASE_URL="postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require"
+DATABASE_URL="postgresql://user:pass@ep-xxx.neon.tech/neondb?sslmode=require&channel_binding=require"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="tu-secreto-super-seguro-aqui"
+NEXTAUTH_SECRET="genera-con-openssl-rand-base64-32"
 
-# OAuth (opcional)
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
+# Google OAuth
+GOOGLE_CLIENT_ID="tu-google-client-id"
+GOOGLE_CLIENT_SECRET="tu-google-client-secret"
 
-# IA (OpenAI)
+# AI (OpenAI)
 OPENAI_API_KEY="sk-..."
 
 # App
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEXT_PUBLIC_APP_NAME="Kept"
 ```
+
+### Configuración de Google OAuth
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com)
+2. Crea un proyecto o selecciona uno existente
+3. Habilita **Google OAuth 2.0 API**
+4. Crea credenciales **OAuth 2.0 Client ID**
+   - Tipo: Aplicación web
+   - Orígenes autorizados: `http://localhost:3000`
+   - URIs de redirección autorizados: `http://localhost:3000/api/auth/callback/google`
+5. Copia **Client ID** y **Client Secret** a tu `.env`
 
 ---
 
@@ -143,7 +157,7 @@ kept-app/
 │   │   ├── ai-spark/          # SparkChat, SparkCard, SparkCarousel
 │   │   ├── forms/             # TransactionForm, GoalForm
 │   │   ├── mobile-layout.tsx  # Bottom nav + sheets
-│   │   └── ui/                # Shadcn/UI components
+│   │   └── ui/                # Shadcn/UI + animated components
 │   ├── hooks/
 │   │   ├── useSpark.ts        # Hook principal IA
 │   │   └── useTransactions.ts # Hooks transacciones offline
@@ -209,6 +223,8 @@ npx tsc --noEmit
 - `NEXTAUTH_SECRET` (genera con `openssl rand -base64 32`)
 - `NEXTAUTH_URL` (tu URL de Vercel)
 - `OPENAI_API_KEY`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
 
 ---
 
@@ -240,10 +256,10 @@ MIT License - ver [LICENSE](LICENSE)
 
 - [Next.js](https://nextjs.org) · [Prisma](https://prisma.io) · [NextAuth](https://next-auth.js.org)
 - [Shadcn/UI](https://ui.shadcn.com) · [Dexie.js](https://dexie.org) · [Vercel AI SDK](https://sdk.vercel.ai/docs)
-- [Neon](https://neon.tech) · [Lucide Icons](https://lucide.dev)
+- [Neon](https://neon.tech) · [Lucide Icons](https://lucide.dev) · [Framer Motion](https://framer.com/motion)
 
 ---
 
 **Hecho con ❤️ para que ahorres mejor cada día**
 
-[⭐ Dale una estrella si te gustó](https://github.com/TU_USUARIO/kept-app/stargazers)
+[⭐ Dale una estrella si te gustó](https://github.com/imandro/kept/stargazers)

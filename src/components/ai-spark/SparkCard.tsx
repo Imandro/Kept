@@ -9,6 +9,8 @@ import {
   Zap, AlertCircle, Target, Trophy, BookOpen, Flame, 
   ChevronRight, CheckCircle, X, Clock, Sparkles 
 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { cn } from '@/lib/utils'
 
 const typeConfig: Record<SparkType, { icon: any; color: string; bg: string }> = {
   daily_insight: { icon: Sparkles, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
@@ -42,12 +44,22 @@ export function SparkCard({ spark, onDismiss, onComplete, onAction, compact = fa
     : null
 
   return (
-    <Card className={cn('overflow-hidden border-l-4', config.color.replace('text', 'border'), compact && 'mb-3', isUrgent && 'ring-2 ring-offset-2', config.color.replace('text', 'ring'))}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className={cn('overflow-hidden border-l-4', config.color.replace('text', 'border'), compact && 'mb-3', isUrgent && 'ring-2 ring-offset-2', config.color.replace('text', 'ring'))}
+    >
       <CardContent className={cn('p-4', compact && 'p-3')}>
         <div className="flex items-start gap-3">
-          <div className={cn('h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0', config.bg, config.color)}>
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            className={cn('h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0', config.bg, config.color)}
+          >
             <Icon className="h-5 w-5" />
-          </div>
+          </motion.div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
@@ -60,77 +72,73 @@ export function SparkCard({ spark, onDismiss, onComplete, onAction, compact = fa
               </div>
             </div>
             
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{spark.message}</p>
+            <AnimatePresence mode="wait">
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{spark.message}</p>
+            </AnimatePresence>
             
             {spark.insight && (
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/50 p-2 rounded-lg">
-                💡 {spark.insight}
-              </p>
-            )}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/50 p-2 rounded-lg"
+                >
+                  💡 {spark.insight}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {spark.metadata && Object.keys(spark.metadata).length > 0 && (
-              <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-xs text-gray-500">Detalles: {JSON.stringify(spark.metadata, null, 0).slice(0, 100)}...</p>
-              </div>
-            )}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-800"
+                >
+                  <p className="text-xs text-gray-500">Detalles: {JSON.stringify(spark.metadata, null, 0).slice(0, 100)}...</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="flex flex-col gap-1 shrink-0">
             {spark.action && spark.action.type !== 'none' && (
-              <Button 
-                size="sm" 
-                className="w-full justify-start gap-2"
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => onAction(spark)}
+                className="w-full justify-start gap-2"
               >
                 <ChevronRight className="h-4 w-4" />
                 {spark.action.label}
-              </Button>
+              </motion.button>
             )}
             
             <div className="flex gap-1">
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onComplete(spark.id)} title="Completado">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                variant="ghost" size="icon" className="h-8 w-8"
+                onClick={() => onComplete(spark.id)}
+                title="Completado"
+              >
                 <CheckCircle className="h-4 w-4 text-green-600" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDismiss(spark.id)} title="Descartar">
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                variant="ghost" size="icon" className="h-8 w-8"
+                onClick={() => onDismiss(spark.id)}
+                title="Descartar"
+              >
                 <X className="h-4 w-4 text-gray-400" />
-              </Button>
+              </motion.button>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-export function SparkCarousel({ sparks, onDismiss, onComplete, onAction }: { 
-  sparks: Spark[]
-  onDismiss: (id: string) => void
-  onComplete: (id: string) => void
-  onAction: (spark: Spark) => void
-}) {
-  const activeSparks = sparks.filter(s => !s.dismissed && !s.completed)
-  
-  if (activeSparks.length === 0) return null
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-purple-500" />
-          Sparks del Día
-        </h2>
-        <Badge variant="secondary" className="text-xs">{activeSparks.length}</Badge>
-      </div>
-      <div className="space-y-2">
-        {activeSparks.slice(0, 3).map(spark => (
-          <SparkCard key={spark.id} spark={spark} onDismiss={onDismiss} onComplete={onComplete} onAction={onAction} compact />
-        ))}
-        {activeSparks.length > 3 && (
-          <Button variant="outline" size="sm" className="w-full text-xs">
-            Ver {activeSparks.length - 3} sparks más
-          </Button>
-        )}
-      </div>
-    </div>
+      </Card>
+    </motion.div>
   )
 }
