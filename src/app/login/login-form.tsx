@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -23,9 +23,16 @@ export function LoginForm() {
   const error = searchParams.get('error')
   
   const [isLoading, setIsLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState(error ? 'Credenciales inválidas' : '')
   const [showPassword, setShowPassword] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('registered') === '1') {
+      setSuccessMessage('Cuenta creada. Inicia sesión.')
+    }
+  }, [searchParams])
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -94,12 +101,23 @@ export function LoginForm() {
           </CardHeader>
           
           <AnimatePresence mode="wait">
+            {successMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                exit={{ opacity: 0, y: -10, height: 0 }}
+                className="mx-6 mb-4 p-3 text-sm text-foreground bg-muted border border-border rounded-xl flex items-center gap-2"
+                role="status"
+              >
+                <span>{successMessage}</span>
+              </motion.div>
+            )}
             {errorMessage && (
               <motion.div
                 initial={{ opacity: 0, y: -10, height: 0 }}
                 animate={{ opacity: 1, y: 0, height: 'auto' }}
                 exit={{ opacity: 0, y: -10, height: 0 }}
-                className="mx-6 mb-4 p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex items-center gap-2"
+                className="mx-6 mb-4 p-3 text-sm text-destructive bg-muted border border-border rounded-xl flex items-center gap-2"
                 role="alert"
               >
                 <AlertCircle className="h-4 w-4 flex-shrink-0" />
