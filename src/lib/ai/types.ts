@@ -112,7 +112,7 @@ export interface SparkMessage {
   toolResult?: any
   timestamp: string
   metadata?: {
-    sparkGenerated?: Spark
+    sparksGenerated?: Spark[]
     actionExecuted?: ActionResult
     contextUsed?: string[]
   }

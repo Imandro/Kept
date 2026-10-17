@@ -82,7 +82,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        session.user.provider = token.provider as string
+        ;(session.user as any).provider = token.provider as string
       }
       return session
     },
@@ -92,7 +92,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Crear preferencias por defecto para nuevos usuarios
       await prisma.userPreferences.create({
         data: {
-          userId: user.id,
+          userId: user.id!,
           theme: 'system',
           defaultView: 'dashboard',
           autoCategorize: true,
@@ -103,14 +103,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           currencyFormat: { locale: 'es-MX', currency: 'MXN' },
           dateFormat: 'DD/MM/YYYY',
           firstDayOfWeek: 1,
-        },
+        } as any,
       })
       // Cuentas por defecto
       await prisma.financialAccount.createMany({
         data: [
-          { userId: user.id, name: 'Efectivo', type: 'cash', balance: 0, currency: 'MXN', icon: 'wallet', color: '#22c55e', isDefault: true },
-          { userId: user.id, name: 'Cuenta Bancaria', type: 'checking', balance: 0, currency: 'MXN', icon: 'credit-card', color: '#3b82f6', isDefault: false },
-          { userId: user.id, name: 'Ahorros', type: 'savings', balance: 0, currency: 'MXN', icon: 'piggy-bank', color: '#8b5cf6', isDefault: false },
+          { userId: user.id!, name: 'Efectivo', type: 'cash', balance: 0, currency: 'MXN', icon: 'wallet', color: '#22c55e', isDefault: true },
+          { userId: user.id!, name: 'Cuenta Bancaria', type: 'checking', balance: 0, currency: 'MXN', icon: 'credit-card', color: '#3b82f6', isDefault: false },
+          { userId: user.id!, name: 'Ahorros', type: 'savings', balance: 0, currency: 'MXN', icon: 'piggy-bank', color: '#8b5cf6', isDefault: false },
         ],
       })
       // Categorías del sistema
@@ -139,7 +139,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       ]
       for (const cat of systemCategories) {
         await prisma.category.create({
-          data: { ...cat, userId: user.id },
+          data: { ...cat, userId: user.id! } as any,
         })
       }
       // Método de ahorro 50/30/20 por defecto
@@ -150,7 +150,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (checking && cash && savings) {
         await prisma.savingMethod.create({
           data: {
-            userId: user.id,
+            userId: user.id!,
             name: 'Regla 50/30/20',
             type: 'PERCENTAGE_50_30_20',
             configuration: { needs: 50, wants: 30, savings: 20, autoAllocate: true, needsAccountId: checking.id, wantsAccountId: cash.id, savingsAccountId: savings.id },
@@ -162,7 +162,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 { percentage: 20, targetAccountId: savings.id, priority: 3 },
               ],
             },
-          },
+          } as any,
         })
       }
     },

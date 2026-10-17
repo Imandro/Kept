@@ -174,10 +174,9 @@ export function LoginForm() {
                 <ScaleIn delay={0.2}>
                   <Button
                     type="submit"
-                    className="w-full"
                     size="lg"
                     loading={isLoading}
-                    className="h-12 text-lg"
+                    className="w-full h-12 text-lg"
                   >
                     Iniciar Sesión
                   </Button>
@@ -192,11 +191,9 @@ export function LoginForm() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              variant="outline"
-              className="w-full flex items-center justify-center gap-3"
+              className="w-full h-12 flex items-center justify-center gap-3 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none"
               onClick={handleGoogleSignIn}
               disabled={isGoogleLoading}
-              className="h-12"
             >
               <motion.svg
                 whileHover={{ scale: 1.1 }}

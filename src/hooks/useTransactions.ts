@@ -40,7 +40,7 @@ export function useTransactions(params?: {
       const searchParams = new URLSearchParams()
       if (params?.page) searchParams.set('page', String(params.page))
       if (params?.limit) searchParams.set('limit', String(params.limit))
-      Object.entries(params || {}).forEach(([k, v]) => v && searchParams.set(k, v))
+      Object.entries(params || {}).forEach(([k, v]) => v && searchParams.set(k, String(v)))
       
       const res = await fetch(`${API_BASE}?${searchParams}`)
       if (!res.ok) throw new Error('Error fetching transactions')
@@ -114,7 +114,7 @@ export function useUpdateTransaction() {
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<TransactionInput> }) => {
       // Actualizar en IndexedDB
-      await db.transactions.update(id, { ...data, updatedAt: new Date().toISOString(), pending: true })
+      await db.transactions.update(id as any, { ...data, updatedAt: new Date().toISOString(), pending: true })
       await queueUpdate('transaction', { localId: id, ...data } as any)
 
       // Optimistic update
@@ -140,7 +140,7 @@ export function useDeleteTransaction() {
   return useMutation({
     mutationFn: async (id: string) => {
       // Soft delete en IndexedDB
-      await db.transactions.update(id, { deleted: true, pending: true })
+      await db.transactions.update(id as any, { deleted: true, pending: true })
       await queueDelete('transaction', id)
 
       // Optimistic update
@@ -164,7 +164,7 @@ export function useSyncStatus() {
     queryKey: ['syncStatus'],
     queryFn: async () => {
       const pending = await db.syncQueue.count()
-      const unsyncedTx = await db.transactions.where('synced').equals(false).count()
+      const unsyncedTx = await db.transactions.where('synced').equals(false as any).count()
       return { pending, unsyncedTx, isOnline: navigator.onLine }
     },
     refetchInterval: 5000,

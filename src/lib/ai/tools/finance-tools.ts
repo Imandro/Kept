@@ -52,11 +52,11 @@ export async function getFinancialContext(userId: string): Promise<FinancialCont
       id: t.id, amount: Number(t.amount), type: t.type, description: t.description,
       date: t.date.toISOString(), category: t.category ? { name: t.category.name, icon: t.category.icon, color: t.category.color } : undefined,
       account: { name: t.account.name }, goal: t.goal ? { name: t.goal.name } : null,
-    })),
+    })) as any,
     goals: goals.map(g => ({
       id: g.id, name: g.name, targetAmount: Number(g.targetAmount), currentAmount: Number(g.currentAmount),
       targetDate: g.targetDate.toISOString(), status: g.status, icon: g.icon, color: g.color,
-    })),
+    })) as any,
     budgets: budgets.map(b => ({
       id: b.id, name: b.name, amount: Number(b.amount), spent: Number(b.spent),
       category: { name: b.category.name, icon: b.category.icon, color: b.category.color },
@@ -140,7 +140,7 @@ async function detectPatterns(userId: string, monthlyTx: any[], recentTx: any[],
       acc[day] = (acc[day] || 0) + Number(t.amount)
       return acc
     }, {} as Record<number, number>)
-  const maxDay = Object.entries(daySpending).sort((a, b) => b[1] - a[1])[0]
+  const maxDay = Object.entries(daySpending as Record<number, number>).sort((a: any, b: any) => b[1] - a[1])[0] as any
   const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
   if (maxDay && maxDay[1] > 0) {
     patterns.push({
@@ -165,8 +165,8 @@ function detectSubscriptions(transactions: any[]) {
   }, {} as Record<string, any[]>)
 
   return Object.values(grouped)
-    .filter(g => g.length >= 2)
-    .map(g => ({
+    .filter((g: any) => g.length >= 2)
+    .map((g: any) => ({
       category: g[0].category?.name,
       amount: Number(g[0].amount),
       frequency: g.length,
@@ -187,7 +187,7 @@ function detectCategorySpikes(transactions: any[], categories: any[]) {
 
   // Simular promedio histórico (en producción usar últimos 3 meses)
   return Object.entries(byCategory)
-    .map(([catId, data]) => {
+    .map(([catId, data]: [string, any]) => {
       const avgHistorical = data.total * 0.7 // Mock: 70% del actual
       const percent = ((data.total - avgHistorical) / avgHistorical) * 100
       return {
@@ -275,7 +275,7 @@ async function createGoal(userId: string, params: any, actionId: string): Promis
   const { name, targetAmount, targetDate, description, icon, color } = params
 
   const goal = await prisma.goal.create({
-    data: { userId, name, targetAmount, targetDate: new Date(targetDate), description, icon, color, currentAmount: 0, status: 'ACTIVE' },
+    data: { userId, name, targetAmount, targetDate: new Date(targetDate), description, icon, color, currentAmount: 0, status: 'ACTIVE' } as any,
   })
 
   return {

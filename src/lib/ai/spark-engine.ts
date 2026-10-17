@@ -1,24 +1,24 @@
-import { FinancialContext, Spark, SparkMessage, ChatContext, ParsedAction, SparkType } from '@/lib/ai/types'
+import { FinancialContext, Spark, SparkMessage, ChatContext, SparkType } from '@/lib/ai/types'
 import { getFinancialContext, executeAction } from './tools/finance-tools'
 import { generateDailySpark, generateWeeklyReview } from './tools/spark-tools'
 import { parseUserIntent, generateActionResponse } from './tools/action-tools'
 import { prisma } from '@/lib/prisma'
 import { openai } from '@ai-sdk/openai'
-import { streamText, tool } from 'ai'
+import { streamText, tool, stepCountIs } from 'ai'
 import { z } from 'zod'
 
 // ============ Herramientas para el LLM ============
 
-const financeTools = {
+const financeTools: any = {
   getFinancialContext: tool({
     description: 'Obtener contexto financiero completo del usuario',
-    parameters: z.object({ userId: z.string() }),
+    inputSchema: z.object({ userId: z.string() }),
     execute: async ({ userId }) => getFinancialContext(userId),
   }),
 
   getSpendingPatterns: tool({
     description: 'Analizar patrones de gasto recientes',
-    parameters: z.object({ userId: z.string() }),
+    inputSchema: z.object({ userId: z.string() }),
     execute: async ({ userId }) => {
       const context = await getFinancialContext(userId)
       return context.patterns
@@ -27,7 +27,7 @@ const financeTools = {
 
   getActiveGoals: tool({
     description: 'Obtener metas activas con progreso',
-    parameters: z.object({ userId: z.string() }),
+    inputSchema: z.object({ userId: z.string() }),
     execute: async ({ userId }) => {
       const context = await getFinancialContext(userId)
       return context.goals
@@ -36,7 +36,7 @@ const financeTools = {
 
   getBudgetsStatus: tool({
     description: 'Ver estado de presupuestos actuales',
-    parameters: z.object({ userId: z.string() }),
+    inputSchema: z.object({ userId: z.string() }),
     execute: async ({ userId }) => {
       const context = await getFinancialContext(userId)
       return context.budgets
@@ -45,14 +45,14 @@ const financeTools = {
 
   executeFinanceAction: tool({
     description: 'Ejecutar acción financiera (crear transacción, meta, presupuesto, transferencia)',
-    parameters: z.object({
+    inputSchema: z.object({
       userId: z.string(),
       action: z.object({
         type: z.enum([
           'create_transaction', 'create_goal', 'update_goal', 'create_budget',
           'transfer_between_accounts', 'create_recurring', 'set_savings_allocation', 'create_milestone'
         ]),
-        params: z.record(z.any()),
+        params: z.record(z.string(), z.any()),
         description: z.string(),
         requiresConfirmation: z.boolean(),
       }),
@@ -62,7 +62,7 @@ const financeTools = {
 
   generateDailySparks: tool({
     description: 'Generar sparks inteligentes para hoy',
-    parameters: z.object({ userId: z.string() }),
+    inputSchema: z.object({ userId: z.string() }),
     execute: async ({ userId }) => {
       const context = await getFinancialContext(userId)
       return generateDailySpark(context)
@@ -71,7 +71,7 @@ const financeTools = {
 
   generateWeeklyReviewSpark: tool({
     description: 'Generar reporte semanal',
-    parameters: z.object({ userId: z.string() }),
+    inputSchema: z.object({ userId: z.string() }),
     execute: async ({ userId }) => {
       const context = await getFinancialContext(userId)
       return generateWeeklyReview(context)
@@ -166,9 +166,9 @@ CONTEXTO ACTUAL:
     const result = streamText({
       model: openai('gpt-4o'),
       system: systemPrompt,
-      messages: messages.map(m => ({ role: m.role, content: m.content })),
+      messages: messages.map(m => ({ role: m.role, content: m.content })) as any,
       tools: financeTools,
-      maxSteps: 5,
+      stopWhen: stepCountIs(5),
       temperature: 0.7,
     })
 
@@ -255,7 +255,7 @@ CONTEXTO ACTUAL:
   }
 
   // ============ Ejecutar Acción Confirmada ============
-  async executeConfirmedAction(actionType: string, params: any): Promise<ActionResult> {
+  async executeConfirmedAction(actionType: string, params: any): Promise<any> {
     return executeAction(this.userId, { type: actionType as any, params, description: '', requiresConfirmation: false })
   }
 }

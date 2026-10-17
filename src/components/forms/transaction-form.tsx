@@ -36,7 +36,7 @@ export function TransactionForm({
   isEditing = false,
 }: TransactionFormProps) {
   const form = useForm<TransactionInput>({
-    resolver: zodResolver(transactionSchema),
+    resolver: zodResolver(transactionSchema) as any,
     defaultValues: {
       type: 'EXPENSE',
       date: format(new Date(), 'yyyy-MM-dd'),

@@ -3,8 +3,16 @@
 import { motion, HTMLMotionProps } from 'framer-motion'
 import { forwardRef, type ComponentPropsWithoutRef } from 'react'
 
+interface AnimatedDivProps extends HTMLMotionProps<'div'> {
+  delay?: number
+  duration?: number
+  y?: number
+  stagger?: number
+  trigger?: number
+}
+
 // Fade in
-export const FadeIn = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const FadeIn = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, delay = 0, duration = 0.3, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -21,7 +29,7 @@ export const FadeIn = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 FadeIn.displayName = 'FadeIn'
 
 // Slide up
-export const SlideUp = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const SlideUp = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, delay = 0, duration = 0.4, y = 20, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -38,7 +46,7 @@ export const SlideUp = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 SlideUp.displayName = 'SlideUp'
 
 // Scale in
-export const ScaleIn = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const ScaleIn = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, delay = 0, duration = 0.2, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -55,7 +63,7 @@ export const ScaleIn = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 ScaleIn.displayName = 'ScaleIn'
 
 // Stagger container
-export const StaggerContainer = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const StaggerContainer = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, stagger = 0.1, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -75,7 +83,7 @@ export const StaggerContainer = forwardRef<HTMLDivElement, HTMLMotionProps<'div'
 StaggerContainer.displayName = 'StaggerContainer'
 
 // Stagger item
-export const StaggerItem = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const StaggerItem = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -93,7 +101,7 @@ export const StaggerItem = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 StaggerItem.displayName = 'StaggerItem'
 
 // Pulse animation for loading states
-export const Pulse = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const Pulse = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -109,7 +117,7 @@ export const Pulse = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 Pulse.displayName = 'Pulse'
 
 // Shake for errors
-export const Shake = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
+export const Shake = forwardRef<HTMLDivElement, AnimatedDivProps>(
   ({ children, className, trigger = 0, ...props }, ref) => (
     <motion.div
       ref={ref}
@@ -125,7 +133,7 @@ export const Shake = forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
 Shake.displayName = 'Shake'
 
 // Floating action button animation
-export const FloatingActionButton = forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+export const FloatingActionButton = forwardRef<HTMLButtonElement, HTMLMotionProps<'button'>>(
   ({ children, className, ...props }, ref) => (
     <motion.button
       ref={ref}
@@ -184,7 +192,7 @@ export const Skeleton = ({
   return (
     <motion.div
       style={baseStyle}
-      {...motionProps}
+      {...(motionProps as any)}
       className={className}
     />
   )

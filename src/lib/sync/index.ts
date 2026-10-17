@@ -37,7 +37,7 @@ export async function stopSyncEngine(): Promise<void> {
   }
 }
 
-export async function processSyncQueue(): Promise<void> {
+export let processSyncQueue: () => Promise<void> = async (): Promise<void> => {
   if (syncInProgress || !navigator.onLine) return;
   
   syncInProgress = true;
@@ -108,14 +108,14 @@ export async function queueCreate<T extends { localId: string }>(
   entity: 'transaction' | 'account' | 'goal' | 'category',
   data: T
 ): Promise<void> {
-  await db[entity + 's' as keyof typeof db].add(data as any);
+  await (db[entity + 's' as keyof typeof db] as any).add(data as any);
 }
 
 export async function queueUpdate<T extends { localId: string; serverId?: string }>(
   entity: 'transaction' | 'account' | 'goal' | 'category',
   data: T
 ): Promise<void> {
-  await db[entity + 's' as keyof typeof db].update(data.localId, data as any);
+  await (db[entity + 's' as keyof typeof db] as any).update(data.localId, data as any);
 }
 
 export async function queueDelete(
@@ -124,7 +124,7 @@ export async function queueDelete(
   serverId?: string
 ): Promise<void> {
   // Soft delete
-  await db[entity + 's' as keyof typeof db].update(localId, { deleted: true, pending: true });
+  await (db[entity + 's' as keyof typeof db] as any).update(localId, { deleted: true, pending: true });
   await db.syncQueue.add({
     entity,
     action: 'delete',

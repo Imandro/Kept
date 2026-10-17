@@ -8,8 +8,8 @@ export function generateDailySpark(context: FinancialContext): Spark[] {
   const today = new Date().toISOString().split('T')[0]
 
   // 1. Spark de Insight Diario (basado en patrones)
-  if (patterns.length > 0) {
-    const topPattern = patterns[0]
+  if (patterns?.length) {
+    const topPattern = patterns[0]!
     sparks.push(createPatternSpark(topPattern, today))
   }
 
@@ -254,7 +254,7 @@ function getTopCategory(transactions: any[]): string {
     acc[cat] = (acc[cat] || 0) + t.amount
     return acc
   }, {} as Record<string, number>)
-  const top = Object.entries(byCat).sort((a, b) => b[1] - a[1])[0]
+  const top = Object.entries(byCat as Record<string, number>).sort((a, b) => b[1] - a[1])[0]
   return top ? `${top[0]} ($${top[1].toLocaleString()})` : 'Ninguno'
 }
 
@@ -265,7 +265,7 @@ function getBestDay(transactions: any[]): string {
     acc[day] = (acc[day] || 0) + t.amount
     return acc
   }, {} as Record<number, number>)
-  const best = Object.entries(byDay).sort((a, b) => b[1] - a[1])[0]
+  const best = Object.entries(byDay as Record<string, number>).sort((a, b) => b[1] - a[1])[0]
   const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
   return best ? `${days[parseInt(best[0])]} ($${best[1].toLocaleString()})` : 'Ninguno'
 }

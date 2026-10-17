@@ -202,10 +202,10 @@ function findCategoryByKeywords(message: string, context: FinancialContext, type
   }
 
   const lower = message.toLowerCase()
-  for (const [catName, keywords] of Object.entries(keywords)) {
-    if (keywords.some(k => lower.includes(k))) {
+  for (const [catName, words] of Object.entries(keywords)) {
+    if (words.some((k: string) => lower.includes(k))) {
       const cat = uniqueCats.find(c => c?.name?.toLowerCase().includes(catName))
-      if (cat) return cat.id
+      if (cat) return (cat as any).id
     }
   }
   return undefined
@@ -219,8 +219,8 @@ function findAccountByKeywords(message: string, context: FinancialContext, direc
   }
 
   const lower = message.toLowerCase()
-  for (const [accType, keywords] of Object.entries(keywords)) {
-    if (keywords.some(k => lower.includes(k))) {
+  for (const [accType, words] of Object.entries(keywords)) {
+    if (words.some((k: string) => lower.includes(k))) {
       const acc = context.accounts.find(a => a.type === accType || a.name.toLowerCase().includes(accType))
       if (acc) return acc.id
     }
