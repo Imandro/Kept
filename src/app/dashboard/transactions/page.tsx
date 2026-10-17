@@ -238,7 +238,7 @@ export default function TransactionsPage() {
               <h1 className="text-2xl font-bold">Transacciones</h1>
               <div className="flex gap-2">
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-10 w-10">
+                  <Button variant="outline" size="icon" className="h-10 w-10" aria-label="Filtros">
                     <Filter className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
@@ -335,7 +335,7 @@ export default function TransactionsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    className="h-9 w-9 text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setEditingTransaction(tx)
                       setTransactionFormOpen(true)
@@ -346,7 +346,7 @@ export default function TransactionsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-red-600"
+                    className="h-9 w-9 text-muted-foreground hover:text-destructive"
                     onClick={() => handleDelete(tx.id)}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
