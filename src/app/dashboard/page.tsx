@@ -169,51 +169,38 @@ export default function DashboardPage() {
 
         {/* Balance Cards */}
         <FadeIn delay={0.1}>
-          <div className="grid grid-cols-2 gap-3">
-            <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-              <CardContent className="p-4">
+          <div className="space-y-3">
+            <Card>
+              <CardContent className="p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-green-700 dark:text-green-300 font-medium">Ingresos</p>
-                    <p className="text-xl font-bold text-green-800 dark:text-green-200">{formatCurrency(summary?.income || 0)}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Balance</p>
+                    <p className={cn('text-3xl font-bold mt-1', balanceColor)}>{formatCurrency(summary?.balance || 0)}</p>
                   </div>
-                  <Wallet className="h-8 w-8 text-green-500" />
+                  <TrendingUp className={cn('h-6 w-6', balanceColor)} />
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-red-700 dark:text-red-300 font-medium">Gastos</p>
-                    <p className="text-xl font-bold text-red-800 dark:text-red-200">{formatCurrency(summary?.expenses || 0)}</p>
-                  </div>
-                  <CreditCard className="h-8 w-8 text-red-500" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className={cn('bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800', balanceColor === 'text-green-600' ? 'bg-green-50 dark:bg-green-900/20 border-green-200' : '')}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-purple-700 dark:text-purple-300 font-medium">Balance</p>
-                    <p className={cn('text-xl font-bold', balanceColor)}>{formatCurrency(summary?.balance || 0)}</p>
-                  </div>
-                  <TrendingUp className="h-8 w-8 text-purple-500" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">Ahorrado</p>
-                    <p className="text-xl font-bold text-blue-800 dark:text-blue-200">{formatCurrency(summary?.savings || 0)}</p>
-                  </div>
-                  <PiggyBank className="h-8 w-8 text-blue-500" />
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-3 gap-3">
+              <Card>
+                <CardContent className="p-4">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Ingresos</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(summary?.income || 0)}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Gastos</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(summary?.expenses || 0)}</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Ahorrado</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(summary?.savings || 0)}</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </FadeIn>
 
@@ -233,12 +220,8 @@ export default function DashboardPage() {
                       className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className={cn('h-11 w-11 rounded-xl flex items-center justify-center',
-                          account.type === 'checking' && 'bg-blue-100 text-blue-600',
-                          account.type === 'savings' && 'bg-purple-100 text-purple-600',
-                          account.type === 'cash' && 'bg-green-100 text-green-600',
-                        )}>
-                          <Wallet className="h-5 w-5" />
+                        <div className="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300">
+                          <Wallet className="h-4 w-4" />
                         </div>
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white">{account.name}</p>
@@ -273,7 +256,9 @@ export default function DashboardPage() {
                       <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-3">
-                            <div className={cn('h-10 w-10 rounded-xl flex items-center justify-center', `bg-[${goal.color}]20 text-[${goal.color}]`)}>{goal.icon && <span className="text-xl">{goal.icon}</span>}</div>
+                            <div className="h-9 w-9 rounded-lg flex items-center justify-center text-lg" style={{ backgroundColor: `${goal.color}15`, color: goal.color || undefined }}>
+                              {goal.icon || '🎯'}
+                            </div>
                             <div className="min-w-0">
                               <p className="font-medium text-gray-900 dark:text-white truncate">{goal.name}</p>
                               <p className="text-xs text-gray-500">{isOverdue ? 'Vencida' : `${daysLeft} días`}</p>
@@ -287,8 +272,8 @@ export default function DashboardPage() {
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${Math.min(progress, 100)}%` }}
-                            className={cn('h-full rounded-full transition-all', `bg-[${goal.color}]`)}
-                            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                            className="h-full rounded-full"
+                            style={{ backgroundColor: goal.color || '#3b82f6' }}
                           />
                         </div>
                         <div className="flex justify-between text-xs text-gray-500 mt-1">
