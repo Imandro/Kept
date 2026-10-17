@@ -189,14 +189,14 @@ export default function GoalsPage() {
                         <div
                           className={cn(
                             'h-2 w-2 rounded-full',
-                            m.isCompleted ? 'bg-green-500' : 'bg-gray-300'
+                            m.isCompleted ? 'bg-gray-900 dark:bg-gray-100' : 'bg-gray-300 dark:bg-gray-600'
                           )}
                         />
                         <span className={cn(m.isCompleted && 'line-through text-gray-500')}>
                           {m.name}
                         </span>
                       </div>
-                      <span className={cn('font-medium', m.isCompleted && 'text-green-600')}>
+                      <span className={cn('font-medium', m.isCompleted && 'text-gray-900 dark:text-gray-100')}>
                         {formatCurrency(m.amount)}
                       </span>
                     </div>
@@ -248,24 +248,24 @@ export default function GoalsPage() {
 
         <FadeIn delay={0.1}>
           <div className="grid grid-cols-3 gap-3">
-            <Card className="bg-blue-50 dark:bg-blue-900/20">
+            <Card>
               <CardContent className="p-3 text-center">
-                <Target className="h-5 w-5 text-blue-500 mx-auto mb-1" />
-                <p className="text-[10px] text-blue-700">Activas</p>
+                <Target className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+                <p className="text-[10px] text-gray-500">Activas</p>
                 <p className="text-xl font-bold">{active.length}</p>
               </CardContent>
             </Card>
-            <Card className="bg-green-50 dark:bg-green-900/20">
+            <Card>
               <CardContent className="p-3 text-center">
-                <CheckCircle className="h-5 w-5 text-green-500 mx-auto mb-1" />
-                <p className="text-[10px] text-green-700">Listas</p>
+                <CheckCircle className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+                <p className="text-[10px] text-gray-500">Listas</p>
                 <p className="text-xl font-bold">{completed.length}</p>
               </CardContent>
             </Card>
-            <Card className="bg-purple-50 dark:bg-purple-900/20">
+            <Card>
               <CardContent className="p-3 text-center">
-                <Target className="h-5 w-5 text-purple-500 mx-auto mb-1" />
-                <p className="text-[10px] text-purple-700">Objetivo</p>
+                <Target className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+                <p className="text-[10px] text-gray-500">Objetivo</p>
                 <p className="text-sm font-bold">
                   {formatCurrency(active.reduce((s, g) => s + g.targetAmount, 0))}
                 </p>
@@ -350,11 +350,11 @@ export default function GoalsPage() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold">Completadas</h2>
               {completed.map(g => (
-                <Card key={g.id} className="bg-green-50 dark:bg-green-900/10">
+                <Card key={g.id}>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5" />
+                      <div className="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 flex items-center justify-center">
+                        <CheckCircle className="h-4 w-4" />
                       </div>
                       <div>
                         <p className="font-medium">{g.name}</p>

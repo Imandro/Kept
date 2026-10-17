@@ -302,11 +302,11 @@ export default function TransactionsPage() {
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="h-9 w-9 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
                         {tx.category?.icon ? (
-                          <span style={{ color: tx.category.color }} className="text-lg">
+                          <span style={{ color: tx.category.color }} className="text-lg leading-none">
                             {tx.category.icon}
                           </span>
                         ) : (
-                          <span className="text-gray-400 text-lg">•</span>
+                          <span className="text-gray-400 text-lg leading-none">•</span>
                         )}
                       </div>
                       <div className="min-w-0">

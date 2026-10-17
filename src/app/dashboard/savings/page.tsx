@@ -53,7 +53,7 @@ export default function SavingsPage() {
         </div>
       </div>
 
-      <Card className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white border-0">
+      <Card className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-0">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -100,8 +100,8 @@ export default function SavingsPage() {
             <Card key={s.id}>
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-emerald-600" />
+                  <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">{s.description || 'Ahorro'}</p>
@@ -110,7 +110,7 @@ export default function SavingsPage() {
                     </p>
                   </div>
                 </div>
-                <p className="font-semibold text-emerald-600">+{formatCurrency(s.amount)}</p>
+                <p className="font-semibold text-gray-600 dark:text-gray-300">+{formatCurrency(s.amount)}</p>
               </CardContent>
             </Card>
           ))}

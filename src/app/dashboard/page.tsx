@@ -256,7 +256,7 @@ export default function DashboardPage() {
                       <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-lg flex items-center justify-center text-lg" style={{ backgroundColor: `${goal.color}15`, color: goal.color || undefined }}>
+                            <div className="h-9 w-9 rounded-lg flex items-center justify-center text-lg leading-none" style={{ backgroundColor: `${goal.color}15`, color: goal.color || undefined }}>
                               {goal.icon || '🎯'}
                             </div>
                             <div className="min-w-0">

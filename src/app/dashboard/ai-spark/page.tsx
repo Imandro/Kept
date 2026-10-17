@@ -51,18 +51,18 @@ export default function AISparkPage() {
 
         <FadeIn delay={0.1}>
           <div className="grid grid-cols-4 gap-2">
-            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-3 text-center">
-              <Sparkles className="h-5 w-5 text-purple-500 mx-auto mb-1" />
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 text-center">
+              <Sparkles className="h-5 w-5 text-gray-500 mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.total}</p>
               <p className="text-[10px] text-gray-500">Total</p>
             </div>
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-3 text-center">
-              <CheckCircle className="h-5 w-5 text-green-500 mx-auto mb-1" />
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 text-center">
+              <CheckCircle className="h-5 w-5 text-gray-500 mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.completed}</p>
               <p className="text-[10px] text-gray-500">Listos</p>
             </div>
-            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-3 text-center">
-              <Zap className="h-5 w-5 text-orange-500 mx-auto mb-1" />
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-3 text-center">
+              <Zap className="h-5 w-5 text-gray-500 mx-auto mb-1" />
               <p className="text-xl font-bold">{stats.pending}</p>
               <p className="text-[10px] text-gray-500">Pendientes</p>
             </div>
